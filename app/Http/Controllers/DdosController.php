@@ -105,7 +105,6 @@ class DdosController
 
     public function removeThresholds(Request $request,$uid)
     {
-
         $response = Http::withHeaders([
             'X-Token' => env('APIKEY_DSH')
 
