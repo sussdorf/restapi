@@ -1,0 +1,10 @@
+[2023-09-12 21:04:12] local.ERROR: Call to undefined method Laravel\Lumen\Application::configureMonologUsing() {"exception":"[object] (Error(code: 0): Call to undefined method Laravel\\Lumen\\Application::configureMonologUsing() at /home/users/web1/www/api/bootstrap/app.php:123)
+[stacktrace]
+#0 /home/users/web1/www/api/public/index.php(14): require()
+#1 {main}
+"} 
+[2023-09-12 21:04:13] local.ERROR: Call to undefined method Laravel\Lumen\Application::configureMonologUsing() {"exception":"[object] (Error(code: 0): Call to undefined method Laravel\\Lumen\\Application::configureMonologUsing() at /home/users/web1/www/api/bootstrap/app.php:123)
+[stacktrace]
+#0 /home/users/web1/www/api/public/index.php(14): require()
+#1 {main}
+"} 
