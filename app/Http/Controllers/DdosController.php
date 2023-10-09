@@ -64,7 +64,13 @@ class DdosController
     }
     public function getIncidents(Request $request, $ip)
     {
-
+        $token = $request->bearerToken();
+        $user = \App\Models\User::where('token', $token)->first();
+        $uip = DB::table('ip_addresses')
+            ->where('ip', '=', $ip)
+            ->where('customer','=', $user->email)
+            ->first();
+        if($uip||$user->is_admin==1) {
         $response = Http::withHeaders([
             'X-Token' => env('APIKEY_DSH')
 
@@ -75,10 +81,25 @@ class DdosController
             'status' => $response['status'],
             'data' => $response['items']
         ],200);
+        }
+        else{
+            return response()->json([
+                'error' => 403,
+                'Message' => 'IP not Found'
+            ],403);
+        }
     }
 
     public function setThresholds(Request $request, $ip)
     {
+        $token = $request->bearerToken();
+        $user = \App\Models\User::where('token', $token)->first();
+        $uip = DB::table('ip_addresses')
+            ->where('ip', '=', $ip)
+            ->where('customer','=', $user->email)
+            ->first();
+        if($uip||$user->is_admin==1) {
+
         $response = Http::asJson()->withHeaders(['X-Token' => env('APIKEY_DSH')
         ])->post(env('DSH_APIURL').'protection/thresholds', [
             'prefix'=> $ip.'/32',
@@ -90,21 +111,48 @@ class DdosController
         $resp= $response->body();
 
         return response($resp, 200);
+        }
+        else{
+            return response()->json([
+                'error' => 403,
+                'Message' => 'IP not Found'
+            ],403);
+        }
     }
 
     public function getThresholds(Request $request)
     {
-
+        $token = $request->bearerToken();
+        $user = \App\Models\User::where('token', $token)->first();
+        $uip = DB::table('ip_addresses')
+            ->where('ip', '=', $ip)
+            ->where('customer','=', $user->email)
+            ->first();
+        if($uip||$user->is_admin==1) {
         $response = Http::withHeaders([
             'X-Token' => env('APIKEY_DSH')
 
         ])->get(env('DSH_APIURL').'protection/thresholds');
         $resp= $response->body();
         return response($resp, 200);
+        }
+        else{
+            return response()->json([
+                'error' => 403,
+                'Message' => 'IP not Found'
+            ],403);
+        }
     }
 
     public function removeThresholds(Request $request,$uid)
     {
+        $token = $request->bearerToken();
+        $user = \App\Models\User::where('token', $token)->first();
+        $uip = DB::table('ip_addresses')
+            ->where('ip', '=', $ip)
+            ->where('customer','=', $user->email)
+            ->first();
+        if($uip||$user->is_admin==1) {
         $response = Http::withHeaders([
             'X-Token' => env('APIKEY_DSH')
 
@@ -112,4 +160,12 @@ class DdosController
         $resp= $response->body();
         return response($resp, 200);
     }
+        else{
+            return response()->json([
+                'error' => 403,
+                'Message' => 'IP not Found'
+            ],403);
+        }
+    }
+
 }
