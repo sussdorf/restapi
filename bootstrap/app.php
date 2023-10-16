@@ -89,11 +89,17 @@ $app->routeMiddleware([
 ]);
 
 $app->routeMiddleware([
+    'role' => App\Http\Middleware\CheckUserRole::class,
+]);
+
+$app->routeMiddleware([
     'whitelistips' => App\Http\Middleware\WhitelistIps::class,
 ]);
+
 $app->routeMiddleware([
-    'log' => App\Http\Middleware\LogUserMiddleware::class,
+    'log' => App\Http\Middleware\LogUserActivity::class,
 ]);
+
 
 /*
 |--------------------------------------------------------------------------
