@@ -1,8 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
+<<<<<<< HEAD
 use App\Models\User;
 use App\Models\Ipadress;
+=======
+>>>>>>> c17e19aba8be8924bcfc4c541212fe79c8452fb9
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
@@ -12,6 +15,7 @@ class DdosController
 {
     public function getStatus(Request $request, $ip)
     {
+<<<<<<< HEAD
         $out = Ipadress::where("ip", $ip)->first();
 
         if ($out == null) {
@@ -94,10 +98,78 @@ class DdosController
                 );
             }
         }
+=======
+        $token = $request->bearerToken();
+        $user = \App\Models\User::where('token', $token)->first();
+        $uip = DB::table('ip_addresses')
+            ->where('ip', '=', $ip)
+            ->where('customer','=', $user->email)
+            ->first();
+
+    if($uip||$user->is_admin==1){
+
+        $response = Http::withHeaders([
+            'X-Token' => env('APIKEY_DSH')
+
+        ])->get(env('DSH_APIURL').'protection/routing/'.$ip.'/32');
+        $resp= $response->body();
+
+        return response($resp, 200);
+    }
+    else{
+        return response()->json([
+            'error' => 403,
+            'Message' => 'IP not Found'
+        ],403);
+    }
+    }
+    public function setRouting(Request $request, $ip)
+    {
+        $token = $request->bearerToken();
+        $user = \App\Models\User::where('token', $token)->first();
+        $uip = DB::table('ip_addresses')
+            ->where('ip', '=', $ip)
+            ->where('customer','=', $user->email)
+            ->first();
+        if($uip||$user->is_admin==1) {
+            $response = Http::asJson()->withHeaders(['X-Token' => env('APIKEY_DSH')
+            ])->put(env('DSH_APIURL') . 'protection/routing/' . $ip . '/32', [
+                'l4_permanent' => $request->input('l4_permanent'),
+                'l7_permanent' => $request->input('l7_permanent'),
+                'l7_only' => $request->input('l7_only')
+
+            ]);
+
+            $resp = $response->body();
+
+            return response($resp, 200);
+        }
+        else{
+            return response()->json([
+                'error' => 403,
+                'Message' => 'IP not Found'
+            ],403);
+        }
+    }
+    public function getIncidents(Request $request, $ip)
+    {
+
+        $response = Http::withHeaders([
+            'X-Token' => env('APIKEY_DSH')
+
+        ])->get(env('DSH_APIURL').'protection/incidents/'.$ip);
+        $resp= $response->body();
+        //return response($resp, 200);
+        return response()->json([
+            'status' => $response['status'],
+            'data' => $response['items']
+        ],200);
+>>>>>>> c17e19aba8be8924bcfc4c541212fe79c8452fb9
     }
 
     public function setThresholds(Request $request, $ip)
     {
+<<<<<<< HEAD
         $response = Http::asJson()
             ->withHeaders(["X-Token" => env("APIKEY_DSH")])
             ->post(env("DSH_APIURL") . "protection/thresholds", [
@@ -107,12 +179,24 @@ class DdosController
             ]);
 
         $resp = $response->body();
+=======
+        $response = Http::asJson()->withHeaders(['X-Token' => env('APIKEY_DSH')
+        ])->post(env('DSH_APIURL').'protection/thresholds', [
+            'prefix'=> $ip.'/32',
+            'mbit' => $request->input('mbit'),
+            'kpps'=> $request->input('kpps')
+
+        ]);
+
+        $resp= $response->body();
+>>>>>>> c17e19aba8be8924bcfc4c541212fe79c8452fb9
 
         return response($resp, 200);
     }
 
     public function getThresholds(Request $request)
     {
+<<<<<<< HEAD
         $response = Http::withHeaders([
             "X-Token" => env("APIKEY_DSH"),
         ])->get(env("DSH_APIURL") . "protection/thresholds");
@@ -172,3 +256,24 @@ class DdosController
         }
     }
 }
+=======
+
+        $response = Http::withHeaders([
+            'X-Token' => env('APIKEY_DSH')
+
+        ])->get(env('DSH_APIURL').'protection/thresholds');
+        $resp= $response->body();
+        return response($resp, 200);
+    }
+
+    public function removeThresholds(Request $request,$uid)
+    {
+        $response = Http::withHeaders([
+            'X-Token' => env('APIKEY_DSH')
+
+        ])->delete(env('DSH_APIURL').'protection/thresholds/'.$uid);
+        $resp= $response->body();
+        return response($resp, 200);
+    }
+}
+>>>>>>> c17e19aba8be8924bcfc4c541212fe79c8452fb9
