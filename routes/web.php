@@ -39,7 +39,7 @@
         );
 
         $router->group(
-            ['middleware' => ['jwt.auth','log'], 'prefix' => 'service'],
+            ['middleware' => 'jwt.auth', 'prefix' => 'service'],
             function () use ($router) {
                 $router->get('users', function () {
                     $users = \App\Models\User::all();

@@ -88,15 +88,9 @@ $app->routeMiddleware([
     'admin' => App\Http\Middleware\AdminMiddleware::class,
 ]);
 
-<<<<<<< HEAD
 //$app->routeMiddleware([
     //'role' => App\Http\Middleware\CheckUserRole::class,
 //]);
-=======
-$app->routeMiddleware([
-    'role' => App\Http\Middleware\CheckUserRole::class,
-]);
->>>>>>> c17e19aba8be8924bcfc4c541212fe79c8452fb9
 
 $app->routeMiddleware([
     'whitelistips' => App\Http\Middleware\WhitelistIps::class,
